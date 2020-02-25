@@ -5,13 +5,16 @@ import java.util.List;
 
 public class StorageService {
 
-    public StorageService(boolean isEnable) {
+    private StorageBox box;
+
+    public StorageService(StorageBox box, boolean isEnable) {
+        this.box = box;
         this.isEnable = isEnable;
     }
 
     public boolean isEnable;
 
-    public String getPokemonsDetails(StorageBox box, Trainer trainer) {
+    public List<Pokemon> getPokemons(Trainer trainer) {
         List<Pokemon> pokemons;
         if (box.getPokemons(trainer) == null) {
             pokemons = new ArrayList<Pokemon>();
@@ -20,37 +23,17 @@ public class StorageService {
             pokemons = box.getPokemons(trainer);
         }
 
-        return getPokemonsDetails(pokemons);
+        return pokemons;
     }
 
-    public String getPokemonsDetails(List<Pokemon> pokemons) {
-        StringBuilder builder = new StringBuilder();
-        int position = 0;
-        if (pokemons.size() > 0) {
-            for (Pokemon pokemon: pokemons) {
-
-                builder.append("\t")
-                        .append(position).append(") ")
-                        .append(pokemon.getAlias()).append(", ")
-                        .append(pokemon.getCurrentHealth()).append(" hp\n");
-                position++;
-            }
-        }
-        else {
-            builder.append("Without pokemons to show.\n");
-        }
-        return builder.toString();
-    }
-
-    public void deposit(Trainer trainer, int pokemonNumber, StorageBox box) {
+    public void deposit(Trainer trainer, int pokemonNumber) {
         Pokemon pokemon = trainer.getBackPack().remove(pokemonNumber);
         box.add(trainer, pokemon);
     }
 
-    public void withdraw(Trainer trainer, int pokemonNumber, StorageBox box) {
+    public void withdraw(Trainer trainer, int pokemonNumber) {
         if (box.getPokemons(trainer) == null) {
-            System.out.println("Cannot possible withdraw pokemons. \n");
-            return;
+            throw new IllegalStateException("Cannot possible withdraw of <" + trainer.getName() + "> account.");
         }
         Pokemon pokemon = box.getPokemons(trainer).get(pokemonNumber);
         box.remove(trainer, pokemon);

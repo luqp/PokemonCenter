@@ -1,9 +1,9 @@
 package org.fundationjala;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class StorageBox {
+
     private Map<Trainer, List<Pokemon>> register;
     private boolean isActive;
 

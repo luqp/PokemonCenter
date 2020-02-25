@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class BackPack implements Iterable<Pokemon> {
+
     private List<Pokemon> pokemons;
     private int maxSize;
 
@@ -23,10 +24,6 @@ public class BackPack implements Iterable<Pokemon> {
 
     public Pokemon remove(int index) {
         return pokemons.remove(index);
-    }
-
-    public List<Pokemon> getPokemons() {
-        return pokemons;
     }
 
     @Override

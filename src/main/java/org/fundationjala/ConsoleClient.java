@@ -1,5 +1,6 @@
 package org.fundationjala;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -7,13 +8,11 @@ public class ConsoleClient {
 
     private Scanner scanner;
     private List<Trainer> trainers;
-    private StorageBox box;
     private StorageService storageService;
 
-    public ConsoleClient(List<Trainer> trainers, StorageBox box, StorageService storageService) {
+    public ConsoleClient(List<Trainer> trainers, StorageService storageService) {
         this.storageService = storageService;
         this.trainers = trainers;
-        this.box = box;
     }
 
     public void run() {
@@ -82,44 +81,59 @@ public class ConsoleClient {
             int pokemonNumber;
             switch (actionNumber) {
                 case 1:
-                    System.out.println(storageService.getPokemonsDetails(box, trainer));
+                    showPokemons(storageService.getPokemons(trainer));
                     break;
                 case 2:
-                    List<Pokemon> pokemons = trainer.getBackPack().getPokemons();
-                    System.out.println(storageService.getPokemonsDetails(pokemons));
+                    showPokemons(trainer.getBackPack());
                     break;
                 case 3:
-                    System.out.println("Insert pokemon number of your backpack:");
-                    pokemonNumber = scanner.nextInt();
-                    storageService.deposit(trainer, pokemonNumber, box);
+                    showPokemons(storageService.getPokemons(trainer));
+                    pokemonNumber = getPokemonNumber();
+                    storageService.deposit(trainer, pokemonNumber);
                     break;
                 case 4:
-                    System.out.println("Select pokemon number of PC box:");
-                    pokemonNumber = scanner.nextInt();
-                    storageService.withdraw(trainer, pokemonNumber, box);
+                    showPokemons(trainer.getBackPack());
+                    pokemonNumber = getPokemonNumber();
+                    storageService.withdraw(trainer, pokemonNumber);
                     break;
                 case 5:
                     return true;
                 case 6:
                     return false;
                 default:
-                    System.out.println("Command not in the list.");
+                    System.out.println("Command's not in the list.");
             }
+
+            enterToContinue();
         }
     }
 
-
-    private void showTrainer(int index) {
-        Trainer trainer = trainers.get(index);
-
-        System.out.println("Name: " + trainer.getName());
-        System.out.println("Username: " + trainer.getNickname());
-        System.out.println("Pokemons: ");
-        for (Pokemon pokemon: trainer.getBackPack()) {
-            System.out.println("\tName: " + pokemon.getAlias());
-            System.out.println("\tType: " + pokemon.getGender());
-            System.out.println("\tHP: " + pokemon.getCurrentHealth());
-            System.out.println();
+    private void showPokemons(Iterable<Pokemon> pokemons) {
+        Iterator<Pokemon> iteratorPokemon = pokemons.iterator();
+        StringBuilder builder = new StringBuilder();
+        if (!iteratorPokemon.hasNext()) {
+            builder.append("Without pokemons to show.");
         }
+        else {
+            for (int i = 0; iteratorPokemon.hasNext(); i++) {
+                Pokemon pokemon = iteratorPokemon.next();
+                builder.append("\t")
+                        .append(i).append(") ")
+                        .append(pokemon.getAlias()).append(", ")
+                        .append(pokemon.getCurrentHealth()).append(" hp\n");
+            }
+        }
+        System.out.println(builder.toString());
+    }
+
+
+    private int getPokemonNumber() {
+        System.out.println("Insert pokemon number:");
+        return scanner.nextInt();
+    }
+
+    private void enterToContinue() {
+        System.out.print("Press any <key> to continue.\n");
+        scanner.next();
     }
 }

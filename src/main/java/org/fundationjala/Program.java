@@ -8,8 +8,8 @@ import java.util.Random;
 public class Program {
     public static void main(String[] args) {
         StorageBox box = new StorageBox();
-        StorageService service = new StorageService(true);
-        ConsoleClient client = new ConsoleClient(getTrainersData(), box, service);
+        StorageService service = new StorageService(box, true);
+        ConsoleClient client = new ConsoleClient(getTrainersData(), service);
         client.run();
     }
 
