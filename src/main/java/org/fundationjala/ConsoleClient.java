@@ -63,10 +63,6 @@ public class ConsoleClient {
 
     private boolean runStorageService(Trainer trainer) {
         while (true){
-            if (!storageService.isEnable) {
-                System.out.println("Bill PC is not enable, return later.");
-                return true;
-            }
 
             System.out.println("Bill PC is enable to use.");
             System.out.println("Bill PC Select Action:");

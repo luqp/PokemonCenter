@@ -1,18 +1,19 @@
 package org.fundationjala;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class Program {
     public static void main(String[] args) {
-        StorageBox box = new StorageBox();
-        StorageService service = new StorageService(box, true);
-        ConsoleClient client = new ConsoleClient(getTrainersData(), service);
+        ConsoleClient client = new ConsoleClient(getTrainersData(), getStorageService());
         client.run();
     }
 
+    private static StorageService getStorageService() {
+        StorageBox box = new StorageBox();
+        return new StorageService(box);
+    }
 
     private static List<Trainer> getTrainersData() {
         List<PokemonInfo> pokemonInfos = Arrays.asList(new PokemonInfo("Psyduck", PokemonType.WATER, 100),

@@ -7,23 +7,12 @@ public class StorageService {
 
     private StorageBox box;
 
-    public StorageService(StorageBox box, boolean isEnable) {
+    public StorageService(StorageBox box) {
         this.box = box;
-        this.isEnable = isEnable;
     }
 
-    public boolean isEnable;
-
     public List<Pokemon> getPokemons(Trainer trainer) {
-        List<Pokemon> pokemons;
-        if (box.getPokemons(trainer) == null) {
-            pokemons = new ArrayList<Pokemon>();
-        }
-        else {
-            pokemons = box.getPokemons(trainer);
-        }
-
-        return pokemons;
+       return box.getPokemons(trainer);
     }
 
     public void deposit(Trainer trainer, int pokemonNumber) {
@@ -32,11 +21,10 @@ public class StorageService {
     }
 
     public void withdraw(Trainer trainer, int pokemonNumber) {
-        if (box.getPokemons(trainer) == null) {
-            throw new IllegalStateException("Cannot possible withdraw of <" + trainer.getName() + "> account.");
+        if (box.getPokemons(trainer).isEmpty()) {
+            throw new IllegalStateException("The <" + trainer.getName() + "> account doesn't have pokemons.");
         }
-        Pokemon pokemon = box.getPokemons(trainer).get(pokemonNumber);
-        box.remove(trainer, pokemon);
+        Pokemon pokemon = box.remove(trainer, pokemonNumber);
         trainer.getBackPack().add(pokemon);
     }
 }
